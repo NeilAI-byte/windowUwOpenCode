@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>门窗热工性能计算系统（国标JGJ/T 151-2008版）</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        body {
+            background-color: #f5f7fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #303133;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+        .section {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ebeef5;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #409eff;
+            margin-bottom: 15px;
+        }
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #606266;
+            font-size: 14px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #dcdfe6;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #409eff;
+        }
+        .frame-component {
+            background-color: #f9fafc;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border: 1px solid #e4e7ed;
+        }
+        .frame-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .frame-name {
+            font-weight: bold;
+            color: #303133;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background-color: #409eff;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background-color: #66b1ff;
+        }
+        .btn-success {
+            background-color: #67c23a;
+            color: #fff;
+        }
+        .btn-success:hover {
+            background-color: #85ce61;
+        }
+        .btn-danger {
+            background-color: #f56c6c;
+            color: #fff;
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+        .btn-danger:hover {
+            background-color: #f78989;
+        }
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .result-section {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f0f9eb;
+            border-radius: 6px;
+            border: 1px solid #e1f3d8;
+        }
+        .result-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #67c23a;
+            margin-bottom: 15px;
+        }
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e1f3d8;
+        }
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        .result-label {
+            color: #606266;
+        }
+        .result-value {
+            font-weight: bold;
+            color: #303133;
+        }
+        .result-uw {
+            font-size: 24px;
+            color: #67c23a;
+            text-align: center;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 6px;
+        }
+        .detail-section {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 6px;
+            border: 1px solid #ebeef5;
+        }
+        .detail-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #409eff;
+            margin-bottom: 10px;
+        }
+        .detail-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        .detail-table th, .detail-table td {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ebeef5;
+        }
+        .detail-table th {
+            background-color: #f5f7fa;
+            color: #606266;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>门窗热工性能计算系统（国标JGJ/T 151-2008版）</h1>
+
+        <!-- 基础参数 -->
+        <div class="section">
+            <div class="section-title">一、整窗基础参数</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>整窗宽度 (m)</label>
+                    <input type="number" id="window_width" step="0.001" value="3.608">
+                </div>
+                <div class="form-group">
+                    <label>整窗高度 (m)</label>
+                    <input type="number" id="window_height" step="0.001" value="2.871">
+                </div>
+                <div class="form-group">
+                    <label>玻璃Ug值 (W/m²·K)</label>
+                    <input type="number" id="glass_ug" step="0.001" value="0.7">
+                </div>
+                <div class="form-group">
+                    <label>线传热系数Ψ (W/m·K)</label>
+                    <input type="number" id="psi" step="0.001" value="0.045">
+                </div>
+                <div class="form-group">
+                    <label>玻璃边缘总长度Lg (m)</label>
+                    <input type="number" id="glass_edge_length" step="0.001" value="17.78">
+                </div>
+            </div>
+        </div>
+
+        <!-- 框体部件 -->
+        <div class="section">
+            <div class="section-title">二、框体部件参数（国标要求：每个独立截面单独定义）</div>
+            <div id="frame_components_container">
+                <!-- 默认框体部件 -->
+                <div class="frame-component" data-index="0">
+                    <div class="frame-header">
+                        <span class="frame-name">上横料1</span>
+                        <button class="btn btn-danger" onclick="removeFrameComponent(this)">删除</button>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>部件名称</label>
+                            <input type="text" class="frame-name-input" value="上横料1">
+                        </div>
+                        <div class="form-group">
+                            <label>下料长度 (m)</label>
+                            <input type="number" class="frame-length" step="0.001" value="1.804">
+                        </div>
+                        <div class="form-group">
+                            <label>可视面宽度 (m)</label>
+                            <input type="number" class="frame-visual-width" step="0.001" value="0.06">
+                        </div>
+                        <div class="form-group">
+                            <label>Uf值 (W/m²·K)</label>
+                            <input type="number" class="frame-uf" step="0.001" value="4.2">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="frame-component" data-index="1">
+                    <div class="frame-header">
+                        <span class="frame-name">上横料2</span>
+                        <button class="btn btn-danger" onclick="removeFrameComponent(this)">删除</button>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>部件名称</label>
+                            <input type="text" class="frame-name-input" value="上横料2">
+                        </div>
+                        <div class="form-group">
+                            <label>下料长度 (m)</label>
+                            <input type="number" class="frame-length" step="0.001" value="1.804">
+                        </div>
+                        <div class="form-group">
+                            <label>可视面宽度 (m)</label>
+                            <input type="number" class="frame-visual-width" step="0.001" value="0.06">
+                        </div>
+                        <div class="form-group">
+                            <label>Uf值 (W/m²·K)</label>
+                            <input type="number" class="frame-uf" step="0.001" value="3.9">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="frame-component" data-index="2">
+                    <div class="frame-header">
+                        <span class="frame-name">下横料1</span>
+                        <button class="btn btn-danger" onclick="removeFrameComponent(this)">删除</button>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>部件名称</label>
+                            <input type="text" class="frame-name-input" value="下横料1">
+                        </div>
+                        <div class="form-group">
+                            <label>下料长度 (m)</label>
+                            <input type="number" class="frame-length" step="0.001" value="1.804">
+                        </div>
+                        <div class="form-group">
+                            <label>可视面宽度 (m)</label>
+                            <input type="number" class="frame-visual-width" step="0.001" value="0.06">
+                        </div>
+                        <div class="form-group">
+                            <label>Uf值 (W/m²·K)</label>
+                            <input type="number" class="frame-uf" step="0.001" value="5.1">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="frame-component" data-index="3">
+                    <div class="frame-header">
+                        <span class="frame-name">下横料2</span>
+                        <button class="btn btn-danger" onclick="removeFrameComponent(this)">删除</button>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>部件名称</label>
+                            <input type="text" class="frame-name-input" value="下横料2">
+                        </div>
+                        <div class="form-group">
+                            <label>下料长度 (m)</label>
+                            <input type="number" class="frame-length" step="0.001" value="1.804">
+                        </div>
+                        <div class="form-group">
+                            <label>可视面宽度 (m)</label>
+                            <input type="number" class="frame-visual-width" step="0.001" value="0.06">
+                        </div>
+                        <div class="form-group">
+                            <label>Uf值 (W/m²·K)</label>
+                            <input type="number" class="frame-uf" step="0.001" value="3.8">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="frame-component" data-index="4">
+                    <div class="frame-header">
+                        <span class="frame-name">左侧竖料</span>
+                        <button class="btn btn-danger" onclick="removeFrameComponent(this)">删除</button>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>部件名称</label>
+                            <input type="text" class="frame-name-input" value="左侧竖料">
+                        </div>
+                        <div class="form-group">
+                            <label>下料长度 (m)</label>
+                            <input type="number" class="frame-length" step="0.001" value="2.871">
+                        </div>
+                        <div class="form-group">
+                            <label>可视面宽度 (m)</label>
+                            <input type="number" class="frame-visual-width" step="0.001" value="0.06">
+                        </div>
+                        <div class="form-group">
+                            <label>Uf值 (W/m²·K)</label>
+                            <input type="number" class="frame-uf" step="0.001" value="5.5">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="frame-component" data-index="5">
+                    <div class="frame-header">
+                        <span class="frame-name">右侧竖料</span>
+                        <button class="btn btn-danger" onclick="removeFrameComponent(this)">删除</button>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>部件名称</label>
+                            <input type="text" class="frame-name-input" value="右侧竖料">
+                        </div>
+                        <div class="form-group">
+                            <label>下料长度 (m)</label>
+                            <input type="number" class="frame-length" step="0.001" value="2.871">
+                        </div>
+                        <div class="form-group">
+                            <label>可视面宽度 (m)</label>
+                            <input type="number" class="frame-visual-width" step="0.001" value="0.06">
+                        </div>
+                        <div class="form-group">
+                            <label>Uf值 (W/m²·K)</label>
+                            <input type="number" class="frame-uf" step="0.001" value="4.9">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="frame-component" data-index="6">
+                    <div class="frame-header">
+                        <span class="frame-name">中竖梃</span>
+                        <button class="btn btn-danger" onclick="removeFrameComponent(this)">删除</button>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>部件名称</label>
+                            <input type="text" class="frame-name-input" value="中竖梃">
+                        </div>
+                        <div class="form-group">
+                            <label>下料长度 (m)</label>
+                            <input type="number" class="frame-length" step="0.001" value="2.871">
+                        </div>
+                        <div class="form-group">
+                            <label>可视面宽度 (m)</label>
+                            <input type="number" class="frame-visual-width" step="0.001" value="0.10">
+                        </div>
+                        <div class="form-group">
+                            <label>Uf值 (W/m²·K)</label>
+                            <input type="number" class="frame-uf" step="0.001" value="18.8">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="addFrameComponent()">+ 添加框体部件</button>
+            </div>
+        </div>
+
+        <!-- 操作按钮 -->
+        <div class="btn-group">
+            <button class="btn btn-success" onclick="calculateThermal()">开始计算（国标合规）</button>
+        </div>
+
+        <!-- 结果展示 -->
+        <div id="result_container" class="result-section" style="display: none;">
+            <div class="result-title">三、计算结果（国标JGJ/T 151-2008）</div>
+            <div class="result-item">
+                <span class="result-label">整窗总面积At</span>
+                <span class="result-value" id="res_total_area">-</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">框体总投影面积Af</span>
+                <span class="result-value" id="res_frame_area">-</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">玻璃净面积Ag</span>
+                <span class="result-value" id="res_glass_area">-</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">框体总传热量Σ(Af×Uf)</span>
+                <span class="result-value" id="res_frame_heat">-</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">玻璃传热量Ag×Ug</span>
+                <span class="result-value" id="res_glass_heat">-</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">线传热附加量Ψ×Lg</span>
+                <span class="result-value" id="res_linear_heat">-</span>
+            </div>
+            <div class="result-uw">
+                最终整窗Uw值：<span id="res_uw">-</span> W/(m²·K)
+            </div>
+
+            <!-- 框体部件明细 -->
+            <div class="detail-section">
+                <div class="detail-title">框体部件计算明细</div>
+                <table class="detail-table">
+                    <thead>
+                        <tr>
+                            <th>部件名称</th>
+                            <th>面积 (m²)</th>
+                            <th>Uf值 (W/m²·K)</th>
+                            <th>A×Uf (W/K)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="frame_detail_body">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let frameIndex = 7;
+
+        // 添加框体部件
+        function addFrameComponent() {
+            const container = document.getElementById('frame_components_container');
+            const newComponent = document.createElement('div');
+            newComponent.className = 'frame-component';
+            newComponent.dataset.index = frameIndex;
+            newComponent.innerHTML = `
+                <div class="frame-header">
+                    <span class="frame-name">新框体部件${frameIndex}</span>
+                    <button class="btn btn-danger" onclick="removeFrameComponent(this)">删除</button>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>部件名称</label>
+                        <input type="text" class="frame-name-input" value="新框体部件${frameIndex}">
+                    </div>
+                    <div class="form-group">
+                        <label>下料长度 (m)</label>
+                        <input type="number" class="frame-length" step="0.001" value="1.0">
+                    </div>
+                    <div class="form-group">
+                        <label>可视面宽度 (m)</label>
+                        <input type="number" class="frame-visual-width" step="0.001" value="0.06">
+                    </div>
+                    <div class="form-group">
+                        <label>Uf值 (W/m²·K)</label>
+                        <input type="number" class="frame-uf" step="0.001" value="4.0">
+                    </div>
+                </div>
+            `;
+            container.appendChild(newComponent);
+            frameIndex++;
+        }
+
+        // 删除框体部件
+        function removeFrameComponent(btn) {
+            const component = btn.closest('.frame-component');
+            component.remove();
+        }
+
+        // 收集框体部件参数
+        function collectFrameComponents() {
+            const components = [];
+            const componentElements = document.querySelectorAll('.frame-component');
+            componentElements.forEach(el => {
+                const name = el.querySelector('.frame-name-input').value;
+                const length = parseFloat(el.querySelector('.frame-length').value);
+                const visualWidth = parseFloat(el.querySelector('.frame-visual-width').value);
+                const uf = parseFloat(el.querySelector('.frame-uf').value);
+                components.push({
+                    name: name,
+                    length: length,
+                    visual_width: visualWidth,
+                    uf: uf
+                });
+            });
+            return components;
+        }
+
+        // 计算热工性能
+        async function calculateThermal() {
+            try {
+                // 收集基础参数
+                const params = {
+                    window_width: parseFloat(document.getElementById('window_width').value),
+                    window_height: parseFloat(document.getElementById('window_height').value),
+                    glass_ug: parseFloat(document.getElementById('glass_ug').value),
+                    psi: parseFloat(document.getElementById('psi').value),
+                    glass_edge_length: parseFloat(document.getElementById('glass_edge_length').value),
+                    frame_components: collectFrameComponents()
+                };
+
+                // 发送请求到后端（本地测试用127.0.0.1，部署后改成你的后端地址）
+                const response = await fetch('/api/calculate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(params)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // 显示结果
+                    document.getElementById('result_container').style.display = 'block';
+                    const data = result.data;
+                    document.getElementById('res_total_area').textContent = data.total_area.toFixed(6) + ' ㎡';
+                    document.getElementById('res_frame_area').textContent = data.total_frame_area.toFixed(6) + ' ㎡';
+                    document.getElementById('res_glass_area').textContent = data.glass_area.toFixed(6) + ' ㎡';
+                    document.getElementById('res_frame_heat').textContent = data.total_frame_heat.toFixed(6) + ' W/K';
+                    document.getElementById('res_glass_heat').textContent = data.glass_heat.toFixed(6) + ' W/K';
+                    document.getElementById('res_linear_heat').textContent = data.linear_heat.toFixed(6) + ' W/K';
+                    document.getElementById('res_uw').textContent = data.uw.toFixed(2);
+
+                    // 显示框体部件明细
+                    const detailBody = document.getElementById('frame_detail_body');
+                    detailBody.innerHTML = '';
+                    data.frame_components_detail.forEach(item => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${item.name}</td>
+                            <td>${item.area.toFixed(6)}</td>
+                            <td>${item.uf.toFixed(3)}</td>
+                            <td>${item.area_uf.toFixed(6)}</td>
+                        `;
+                        detailBody.appendChild(row);
+                    });
+                } else {
+                    alert('计算失败：' + result.error);
+                }
+            } catch (error) {
+                alert('请求失败：请确保后端服务已启动！\n错误信息：' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>
